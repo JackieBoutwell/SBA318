@@ -22,6 +22,29 @@ function userLog(req, res, next) {
 
 app.use(userLog);
 
+//2.Custom Middleware
+app.use((req, res, next) => {
+  const time = new Date();
+
+  console.log(
+    `-----
+${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
+  );
+  if (Object.keys(req.body).length > 0) {
+    console.log("Containing the data:");
+    console.log(`${JSON.stringify(req.body)}`);
+  }
+  next();
+});
+    
+
+// function timeStamp(req, res, next) {
+//   req.requestTime = Date.now()/1000;
+//   next();
+// }
+
+// app.use(timeStamp);
+
 app.get("/about", (req, res) => {
     const menu = [
         { title: "Home Page", href: "http://localhost:3000/" },
