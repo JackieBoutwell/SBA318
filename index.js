@@ -1,20 +1,68 @@
 // const express = require("express");
 
 import express from "express";
+import bodyParser from "body-parser";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const _dirname = dirname(fileURLToPath(import.meta.url));
+import morgan from "morgan";
+
 const app = express();
 const port = 3000;
 
-app.get("/", (req, res) => {
-    res.send("<h1> HomePage </h1>");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan("tiny"));
+
+//1. Custom Middleware
+function userLog(req, res, next) {
+    console.log("Request Method: , req.method");
+    console.log("request URL: ", req.url);
+    next()
+}
+
+app.use(userLog);
+
+app.get("/about", (req, res) => {
+    const menu = [
+        { title: "Home Page", href: "http://localhost:3000/" },
+        { title: "Login", href: "http://localhost:3000/login" },
+        { title: "Image", href: "http://localhost:3000/image" },
+    ];
+      res.render("pages/about", { links: menu });
 });
 
-app.post("/register", (req, res) => {
+
+app.get("/login", (req, res) => {
+    res.sendFile(_dirname + "/public/index1.html");
+    app.use(express.static(_dirname + '/public'));
+});
+
+app.get("/home", (req, res) => {
+    res.sendFile(_dirname + "/public/index.html");
+    app.use(express.static(_dirname + '/public'));
+});
+
+app.get("/comment", (req, res) => {
+    res.sendFile(_dirname + "/public/index2.html");
+    app.use(express.static(_dirname + '/public'));
+});
+
+app.post("/login", (req, res) => {
   //This is where I would save the data but I will be sending back a status code instead
-  res.sendStatus(201);
+    //   res.sendStatus(201);
+
+    // console.log(req.body);
 });
 
-app.put("/user/jackie", (req, res) => {
-  res.sendStatus(200);
+app.get("/image", (req, res) => {
+    //   res.download('./images/pizza.png')
+     res.sendFile(_dirname + "/images/pizza.webp");
+});
+
+
+app.put("/comments", (req, res) => {
+
+
 });
 
 app.patch("/user/jackie", (req, res) => {
