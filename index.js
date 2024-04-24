@@ -37,7 +37,9 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
   next();
 });
     
-
+// BLOCKER
+// My time stamp function did not work  used the one from class that we went over.
+//  will have to review this later! 
 // function timeStamp(req, res, next) {
 //   req.requestTime = Date.now()/1000;
 //   next();
@@ -98,6 +100,12 @@ app.delete("/user/jackie", (req, res) => {
 });
 
 
+// Create and use error-handling middleware.
+
+// 404 Middleware
+app.use((req, res, next) => {
+  next(error(404, "Resource Not Found"));
+});
 
 // Error-handling middleware.
 // Any call to next() that includes an
