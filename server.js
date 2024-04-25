@@ -1,21 +1,13 @@
-// const express = require("express");
-
 import express from "express";
 import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const _dirname = dirname(fileURLToPath(import.meta.url));
 import morgan from "morgan";
-
-
+import list from "./data/list.js"
 
 const app = express();
 const port = 3000;
-
-let data = [
-  { "id": 1, "item": "apple" },
-  { "id": 2, "item": "banana" },
-]
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(_dirname + '/public'));
@@ -57,27 +49,17 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
 // }
 
 // app.use(timeStamp);
+let data = {
+  items: list
+};
 
 app.get("/", (req, res) => {
-  console.log(data);
-  const data = {
-    title: "Add to your grocery list",
-    //seconds: new Date().getSeconds(),
-    items: [""],
-    htmlContent: "<em></em>",
-  };
   res.render("storeList.ejs", data);
 });
 
-app.get('/list', (req, res) => {
+app.post('/add', (req, res) => {
   res.json(list)
 })
-
-app.get('/list', (req, res) => {
-  res.json(list)
-})
-
-
 
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);
