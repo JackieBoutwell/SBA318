@@ -12,6 +12,8 @@ const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
+// Parsing Middleware
+app.use(express.json())
 
 //1. Custom Middleware
 function userLog(req, res, next) {
@@ -37,9 +39,10 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
   next();
 });
     
+app.use(express.static(_dirname + '/public'));
 // BLOCKER
 // My time stamp function did not work  used the one from class that we went over.
-//  will have to review this later! 
+//  will have to review this later!
 // function timeStamp(req, res, next) {
 //   req.requestTime = Date.now()/1000;
 //   next();
@@ -47,65 +50,87 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
 
 // app.use(timeStamp);
 
-app.get("/about", (req, res) => {
-    const menu = [
-        { title: "Home Page", href: "http://localhost:3000/" },
-        { title: "Login", href: "http://localhost:3000/login" },
-        { title: "Image", href: "http://localhost:3000/image" },
-    ];
-      res.render("pages/about", { links: menu });
+
+app.get("/", (req, res) => {
+  const data = {
+    title: "Let's go Shopping for some Fruit!",
+    //seconds: new Date().getSeconds(),
+    items: ["apple", "banana", "cherry"],
+    htmlContent: "<em>This is some em text</em>",
+  };
+  res.render("shop.ejs", data);
 });
 
+http://localhost:3000/
+// app.get("/login", (req, res) => {
+//   res.render("login.ejs", {
+   
+//   });
+//   // app.set('view engine', 'ejs');
+// });
 
-app.get("/login", (req, res) => {
-    res.sendFile(_dirname + "/public/index1.html");
-    app.use(express.static(_dirname + '/public'));
-});
+// app.get('/login', (req, res) => {
+//   res.render('login.ejs', req.query);
+// });
 
-app.get("/home", (req, res) => {
-    res.sendFile(_dirname + "/public/index.html");
-    app.use(express.static(_dirname + '/public'));
-});
+// app.post("/login", (req, res) => {
+//   console.log(req.body)
+//   console.log('success')
+// });
 
-app.get("/comment", (req, res) => {
-    res.sendFile(_dirname + "/public/index2.html");
-    app.use(express.static(_dirname + '/public'));
-});
+// app.get("/", (req, res) => {
+//     res.sendFile(_dirname + "/public/index.html");
+//     res.send([])
+//     // express.static(_dirname + '/public');
 
-app.post("/login", (req, res) => {
+// });
+
+// app.get("/home", (req, res) => {
+//     res.sendFile(_dirname + "/public/index.html");
+//     // express.static(_dirname + '/public');
+
+// });
+
+// app.get("/comment", (req, res) => {
+//     res.sendFile(_dirname + "/public/index2.html");
+//     app.use(express.static(_dirname + '/public'));
+// });
+
+// app.post("/login", (req, res) => {
   //This is where I would save the data but I will be sending back a status code instead
     //   res.sendStatus(201);
 
     // console.log(req.body);
-});
+// });
 
-app.get("/image", (req, res) => {
-    //   res.download('./images/pizza.png')
-     res.sendFile(_dirname + "/images/pizza.webp");
-});
-
-
-app.put("/comments", (req, res) => {
+// app.get("/image", (req, res) => {
+//     //   res.download('./images/pizza.png')
+//      res.sendFile(_dirname + "/images/pizza.webp");
+// });
 
 
-});
+// app.put("/comments", (req, res) => {
 
-app.patch("/user/jackie", (req, res) => {
-  res.sendStatus(200);
-});
 
-app.delete("/user/jackie", (req, res) => {
-  //Deleting
-  res.sendStatus(200);
-});
+// });
 
+// app.patch("/user/jackie", (req, res) => {
+//   res.sendStatus(200);
+// });
+
+// app.delete("/user/jackie", (req, res) => {
+//   //Deleting
+//   res.sendStatus(200);
+// });
+// Utilize reasonable data structuring practices.
 
 // Create and use error-handling middleware.
 
 // 404 Middleware
-app.use((req, res, next) => {
-  next(error(404, "Resource Not Found"));
-});
+// app.use((req, res, next) => {
+//     console.log("rni")
+// //   next(error(404, "Resource Not Found"));
+// });
 
 // Error-handling middleware.
 // Any call to next() that includes an
@@ -115,10 +140,10 @@ app.use((req, res, next) => {
 // but allows us to change the processing of ALL errors
 // at once in a single location, which is important for
 // scalability and maintainability.
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.json({ error: err.message });
-});
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500);
+//   res.json({ error: err.message });
+// });
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
