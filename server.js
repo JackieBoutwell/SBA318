@@ -58,8 +58,9 @@ app.get("/", (req, res) => {
 });
 
 app.post('/add', (req, res) => {
-  res.json(list)
-})
+  data.items.push({ "id": data.items.length + 1, "item": req.body.newItem });
+  res.render("storeList.ejs", data);
+});
 
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);
