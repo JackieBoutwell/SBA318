@@ -51,20 +51,18 @@ app.use(express.static(_dirname + '/public'));
 // app.use(timeStamp);
 
 
+
 app.get("/", (req, res) => {
   const data = {
-    title: "Let's go Shopping, add to your grocery list",
+    title: "Add to your grocery list",
     //seconds: new Date().getSeconds(),
     items: [""],
-    htmlContent: "<em> Some text </em>",
+    htmlContent: "<em></em>",
   };
   res.render("list.ejs", data);
 });
 
 
-const item1 = new item ({
-  name : "Welcome to your TodoList!!"
-});
 
 
 app.get("/list", (req, res) => {
