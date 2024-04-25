@@ -53,13 +53,27 @@ app.use(express.static(_dirname + '/public'));
 
 app.get("/", (req, res) => {
   const data = {
-    title: "Let's go Shopping for some Fruit!",
+    title: "Let's go Shopping, add to your grocery list",
     //seconds: new Date().getSeconds(),
-    items: ["apple", "banana", "cherry"],
-    htmlContent: "<em>This is some em text</em>",
+    items: [""],
+    htmlContent: "<em> Some text </em>",
   };
-  res.render("shop.ejs", data);
+  res.render("list.ejs", data);
 });
+
+
+const item1 = new item ({
+  name : "Welcome to your TodoList!!"
+});
+
+
+app.get("/list", (req, res) => {
+    res.sendFile(_dirname + "/public/index.html");
+    res.send([])
+    express.static(_dirname + '/public');
+
+});
+
 
 http://localhost:3000/
 // app.get("/login", (req, res) => {
@@ -78,12 +92,7 @@ http://localhost:3000/
 //   console.log('success')
 // });
 
-// app.get("/", (req, res) => {
-//     res.sendFile(_dirname + "/public/index.html");
-//     res.send([])
-//     // express.static(_dirname + '/public');
 
-// });
 
 // app.get("/home", (req, res) => {
 //     res.sendFile(_dirname + "/public/index.html");
