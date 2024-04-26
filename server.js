@@ -15,6 +15,8 @@ app.use(morgan("tiny"));
 // Parsing Middleware
 app.use(express.json())
 
+console.log(_dirname);
+
 //1. Custom Middleware
 function userLog(req, res, next) {
     console.log("Request Method: , req.method");
@@ -52,16 +54,22 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
 let data = {
   items: list
 };
+let itemCount = data.items.length;
 
 app.get("/", (req, res) => {
-  res.render("storeList.ejs", data);
+  res.render("index.ejs", data);
 });
 
-app.post('/add', (req, res) => {
-  data.items.push({ "id": data.items.length + 1, "item": req.body.newItem });
-  res.render("storeList.ejs", data);
+app.post('/', (req, res) => {
+  itemCount++;
+  data.items.push({ "id": itemCount, "item": req.body.newItem });
+  res.redirect("/");
 });
 
+app.delete("/", (req, res) => {
+  data.items = data.items.filter((item) => { return item.id != req.body.id });
+  res.render("index.ejs", data);
+});
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);
 // });
@@ -74,13 +82,6 @@ app.post('/add', (req, res) => {
 
 // });
 
-// app.post("/", (req, res) => {
-//   console.log(req.body)
-//   console.log('success')
-// });
-
-
-http://localhost:3000/
 // app.get("/login", (req, res) => {
 //   res.render("login.ejs", {
    
@@ -108,11 +109,6 @@ http://localhost:3000/
 //   res.sendStatus(200);
 // });
 
-// app.delete("/user/jackie", (req, res) => {
-//   //Deleting
-//   res.sendStatus(200);
-// });
-// Utilize reasonable data structuring practices.
 
 // Create and use error-handling middleware.
 

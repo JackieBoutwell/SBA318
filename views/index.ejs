@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<%- include("header") -%>
+    <body>
+        <div class="box" id="heading">
+            <h1>
+                Add to Grocery List
+            </h1>
+        </div>
+        <div class="box">
+            <div>
+                <p style="text-align: center;border-bottom: 1px solid #e0e0e0;">Welcome to your Shopping List! <br> Hit
+                    + to add new
+                    item. <br> Tick ☐ to cross out an item</p>
+            </div>
+            <%- include("storeList") -%>
+           <form class="item" action="/" method="post">
+                <input id="add-input" type="text" name="newItem" placeholder="New Item" autocomplete="off" required>
+                <button type="submit" name="list" value="add">+</button>
+            </form>
+        </div>
+        <script type="module">
+            import deleteItem from "/scripts.js";
+
+            const deleteBtn = document.querySelectorAll(".delete-btn");
+            deleteBtn.forEach(btn => btn.addEventListener('click', async () => {
+                const html = await deleteItem(btn.id);
+                document.body.innerHTML = html;
+            }));
+        </script>
+    </body>
+    <%- include("footer") -%>
+</html>

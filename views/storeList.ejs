@@ -1,33 +1,12 @@
-<%- include("header") -%>
-    <body>
-        <div class="box" id="heading">
-            <h1>
-                Add to Grocery List
-            </h1>
+<ul>
+    <%items.forEach((fruit)=> { %>
+        <div>
+            <button id="<%= fruit.id %>" class="delete-btn">Delete</button>
+            <input id='"<%= fruit.id %>-checkbox"' type="checkbox" />
+            <span id='"<%= fruit.id %>-item"'>
+                <%= fruit.item %>
+            </span>
         </div>
-        <div class="box">
-            <div>
-                <p style="text-align: center;border-bottom: 1px solid #e0e0e0;">Welcome to your Shopping List! <br> Hit
-                    + to add new
-                    item. <br> Tick ☐ to cross out an item</p>
-            </div>
-            <ul>
-                <%items.forEach((fruit)=> { %>
-                    <div>
-                        <button id='"<%= fruit.id %>" + "-delete"'>Delete</button>
-                        <input id='"<%= fruit.id %>" + "-complete"' type="checkbox" />
-                        <span id='"<%= fruit.id %>" + "-item"'>
-                            <%= fruit.item %>
-                        </span>
-                    </div>
-                    <%}) %>
-            </ul>
+        <%}) %>
+</ul>
 
-            <form class="item" action="/add/" method="post">
-                <input id="add-input" type="text" name="newItem" placeholder="New Item" autocomplete="off" required>
-                <button type="submit" name="list" value="add">+</button>
-            </form>
-        </div>
-    </body>
-
-    <%- include("footer") -%>
