@@ -1,27 +1,21 @@
-// const express = require("express");
-
 import express from "express";
 import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const _dirname = dirname(fileURLToPath(import.meta.url));
 import morgan from "morgan";
-
-
+import { list, filtered } from "./data/list.js"
 
 const app = express();
 const port = 3000;
-
-let data = [
-  { "id": 1, "item": "apple" },
-  { "id": 2, "item": "banana" },
-]
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(_dirname + '/public'));
 app.use(morgan("tiny"));
 // Parsing Middleware
 app.use(express.json())
+
+console.log(_dirname);
 
 //1. Custom Middleware
 function userLog(req, res, next) {
@@ -57,27 +51,49 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
 // }
 
 // app.use(timeStamp);
+let data = {
+  items: list,
+  filter: filtered
+};
+let itemCount = data.items.length;
 
 app.get("/", (req, res) => {
-  console.log(data);
-  const data = {
-    title: "Add to your grocery list",
-    //seconds: new Date().getSeconds(),
-    items: [""],
-    htmlContent: "<em></em>",
-  };
+  res.render("index.ejs", data);
+});
+
+app.post('/', (req, res) => {
+  itemCount++;
+  data.items.push({ "id": itemCount, "item": req.body.newItem, "completed": false });
+  res.redirect("/");
+});
+
+app.delete("/", (req, res) => {
+  data.items = data.items.filter((item) => { return item.id != req.body.id });
   res.render("storeList.ejs", data);
 });
 
-app.get('/list', (req, res) => {
-  res.json(list)
-})
+app.put("/", async (req, res) => {
+  data.items = data.items.map((item) => {
+    if (item.id == req.body.id) {
+      if (item.completed) {
+        item.completed = false;
+      } else {
+        item.completed = true;
+      }
+    }
+    return item;
+  });
+  res.render("storeList.ejs", data);
+});
 
-app.get('/list', (req, res) => {
-  res.json(list)
-})
-
-
+app.patch("/", async (req, res) => {
+  if (data.filter) {
+    data.filter = false
+  } else {
+    data.filter = true;
+  }
+  res.render("storeList.ejs", data);
+});
 
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);
@@ -91,13 +107,6 @@ app.get('/list', (req, res) => {
 
 // });
 
-// app.post("/", (req, res) => {
-//   console.log(req.body)
-//   console.log('success')
-// });
-
-
-http://localhost:3000/
 // app.get("/login", (req, res) => {
 //   res.render("login.ejs", {
    
@@ -125,19 +134,13 @@ http://localhost:3000/
 //   res.sendStatus(200);
 // });
 
-// app.delete("/user/jackie", (req, res) => {
-//   //Deleting
-//   res.sendStatus(200);
-// });
-// Utilize reasonable data structuring practices.
 
 // Create and use error-handling middleware.
 
 // 404 Middleware
-// app.use((req, res, next) => {
-//     console.log("rni")
-// //   next(error(404, "Resource Not Found"));
-// });
+app.use((req, res, next) => {
+  next(error(404, "Resource Not Found"));
+});
 
 // Error-handling middleware.
 // Any call to next() that includes an
@@ -147,10 +150,10 @@ http://localhost:3000/
 // but allows us to change the processing of ALL errors
 // at once in a single location, which is important for
 // scalability and maintainability.
-// app.use((err, req, res, next) => {
-//   res.status(err.status || 500);
-//   res.json({ error: err.message });
-// });
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({ error: err.message });
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
