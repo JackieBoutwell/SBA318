@@ -1,9 +1,9 @@
 <ul>
     <%items.forEach((fruit)=> { %>
         <div>
-            <button id="<%= fruit.id %>" class="delete-btn">Delete</button>
-            <input id='"<%= fruit.id %>-checkbox"' type="checkbox" />
-            <span id='"<%= fruit.id %>-item"'>
+            <button id="<%= fruit.id %>" class="delete-btn" onclick="deleteBtn(this.id)">Delete</button>
+            <input id="<%= fruit.id %>-checkbox" type="checkbox" class="update-checkbox" <% if(fruit.completed){ %>checked<% } %> />
+            <span id="<%= fruit.id %>-item" class="<% if(fruit.completed){ %>completed<% } %>" >
                 <%= fruit.item %>
             </span>
         </div>

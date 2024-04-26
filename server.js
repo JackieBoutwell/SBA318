@@ -68,7 +68,25 @@ app.post('/', (req, res) => {
 
 app.delete("/", (req, res) => {
   data.items = data.items.filter((item) => { return item.id != req.body.id });
-  res.render("index.ejs", data);
+  res.render("storeList.ejs", data);
+});
+
+app.put("/", async (req, res) => {
+  console.log("in express");
+  console.log(data);
+  data.items = data.items.map((item) => {
+    if (item.id == req.body.id) {
+      if (item.completed) {
+        item.completed = false;
+      } else {
+        item.completed = true;
+      }
+    }
+    return item;
+  });
+  console.log(data);
+  //res.end();
+  //res.render("index.ejs", data);
 });
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);

@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
 
 <%- include("header") -%>
+
     <body>
         <div class="box" id="heading">
             <h1>
@@ -14,21 +15,61 @@
                     + to add new
                     item. <br> Tick ☐ to cross out an item</p>
             </div>
-            <%- include("storeList") -%>
-           <form class="item" action="/" method="post">
+            <div id="store-list"><%- include("storeList") -%></div>
+            <form class="item" action="/" method="post">
                 <input id="add-input" type="text" name="newItem" placeholder="New Item" autocomplete="off" required>
                 <button type="submit" name="list" value="add">+</button>
             </form>
         </div>
-        <script type="module">
-            import deleteItem from "/scripts.js";
+        <script>
+            const deleteBtn = async (btn) => {
+                console.log(btn);
+                const response = await fetch("/", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id: btn }),
+                });
 
-            const deleteBtn = document.querySelectorAll(".delete-btn");
+                const html = await response.text();
+                document.getElementById("store-list").innerHTML = html;
+            }
+            const updateItem = async (id) => {
+                console.log("in scripts");
+                const response = await fetch("/", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id: id }),
+                });
+                //return await response.text();
+            };
+        </script>
+        <!--<script type="module">
+            import { deleteItem, updateItem } from "/scripts.js";
+
+           /* const deleteBtn = document.querySelectorAll(".delete-btn");
             deleteBtn.forEach(btn => btn.addEventListener('click', async () => {
                 const html = await deleteItem(btn.id);
-                document.body.innerHTML = html;
-            }));
-        </script>
+                //document.getElementById("store-list").innerHTML = html;
+            }));*/
+
+            const updateCheckbox = document.querySelectorAll(".update-checkbox");
+            updateCheckbox.forEach(checkbox => checkbox.addEventListener('change', async () => {
+                const getId = checkbox.id.split("-")[0];
+                /*const currentCheckbox = document.getElementById(checkbox.id.split("-")[0] + "-item");
+                if (currentCheckbox.checked) {
+                    currentCheckbox.classList.add("completed");
+                } else {    
+                    currentCheckbox.classList.remove("completed");
+                }*/
+
+                await updateItem(getId);
+            }))
+        </script>-->
     </body>
     <%- include("footer") -%>
+
 </html>

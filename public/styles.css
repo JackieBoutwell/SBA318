@@ -67,3 +67,6 @@ p {
     border-bottom: 0;
 }
 
+.completed {
+    text-decoration: line-through;
+}
