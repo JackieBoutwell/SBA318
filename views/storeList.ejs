@@ -1,12 +1,14 @@
 <ul>
     <%items.forEach((fruit)=> { %>
+        <% if (!filter || !fruit.completed) { %>
         <div>
-            <button id="<%= fruit.id %>" class="delete-btn" onclick="deleteBtn(this.id)">Delete</button>
-            <input id="<%= fruit.id %>-checkbox" type="checkbox" class="update-checkbox" <% if(fruit.completed){ %>checked<% } %> />
-            <span id="<%= fruit.id %>-item" class="<% if(fruit.completed){ %>completed<% } %>" >
-                <%= fruit.item %>
-            </span>
+            <button id="<%= fruit.id %>" onclick="deleteItem(this.id)">Delete</button>
+            <input id="<%= fruit.id %>-checkbox" type="checkbox" class="<% if(fruit.completed){ %>completed<% } %>"
+                onclick="updateItem(this.id)" <% if(fruit.completed){ %>checked<% } %> />
+                <span id="<%= fruit.id %>-item" class="<% if(fruit.completed){ %>completed<% } %>">
+                    <%= fruit.item %>
+                </span>
         </div>
-        <%}) %>
+        <% } %>
+    <%}) %>
 </ul>
-

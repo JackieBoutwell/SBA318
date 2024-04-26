@@ -3,4 +3,6 @@ const list = [
     { "id": 2, "item": "banana", "completed": false  },
 ];
 
-export default list;
+let filtered = false;
+
+export { list, filtered };

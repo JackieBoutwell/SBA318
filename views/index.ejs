@@ -15,6 +15,10 @@
                     + to add new
                     item. <br> Tick ☐ to cross out an item</p>
             </div>
+            <div style="padding: 15px 15px 0px 15px">
+                <span >Filter completed items</span>
+                <input type="checkbox" onclick="filterItems()" />
+            </div>
             <div id="store-list"><%- include("storeList") -%></div>
             <form class="item" action="/" method="post">
                 <input id="add-input" type="text" name="newItem" placeholder="New Item" autocomplete="off" required>
@@ -22,8 +26,7 @@
             </form>
         </div>
         <script>
-            const deleteBtn = async (btn) => {
-                console.log(btn);
+            const deleteItem = async (btn) => {
                 const response = await fetch("/", {
                     method: "DELETE",
                     headers: {
@@ -31,30 +34,41 @@
                     },
                     body: JSON.stringify({ id: btn }),
                 });
-
                 const html = await response.text();
                 document.getElementById("store-list").innerHTML = html;
             }
+
             const updateItem = async (id) => {
-                console.log("in scripts");
+                const getId = id.split("-")[0];
+                console.log(getId);
                 const response = await fetch("/", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ id: id }),
+                    body: JSON.stringify({ id: getId }),
                 });
-                //return await response.text();
+                const html = await response.text();
+                document.getElementById("store-list").innerHTML = html;
             };
+
+            const filterItems = async () => {
+                const response = await fetch("/", {
+                    method: "PATCH"
+                });
+                const html = await response.text();
+                console.log(html);
+                document.getElementById("store-list").innerHTML = html;
+            }
         </script>
         <!--<script type="module">
-            import { deleteItem, updateItem } from "/scripts.js";
+            import { updateItem } from "/scripts.js";
 
-           /* const deleteBtn = document.querySelectorAll(".delete-btn");
-            deleteBtn.forEach(btn => btn.addEventListener('click', async () => {
-                const html = await deleteItem(btn.id);
-                //document.getElementById("store-list").innerHTML = html;
-            }));*/
+            /* const deleteBtn = document.querySelectorAll(".delete-btn");
+             deleteBtn.forEach(btn => btn.addEventListener('click', async () => {
+                 const html = await deleteItem(btn.id);
+                 //document.getElementById("store-list").innerHTML = html;
+             }));*/
 
             const updateCheckbox = document.querySelectorAll(".update-checkbox");
             updateCheckbox.forEach(checkbox => checkbox.addEventListener('change', async () => {

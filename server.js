@@ -4,7 +4,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 const _dirname = dirname(fileURLToPath(import.meta.url));
 import morgan from "morgan";
-import list from "./data/list.js"
+import { list, filtered } from "./data/list.js"
 
 const app = express();
 const port = 3000;
@@ -52,7 +52,8 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
 
 // app.use(timeStamp);
 let data = {
-  items: list
+  items: list,
+  filter: filtered
 };
 let itemCount = data.items.length;
 
@@ -62,7 +63,7 @@ app.get("/", (req, res) => {
 
 app.post('/', (req, res) => {
   itemCount++;
-  data.items.push({ "id": itemCount, "item": req.body.newItem });
+  data.items.push({ "id": itemCount, "item": req.body.newItem, "completed": false });
   res.redirect("/");
 });
 
@@ -72,8 +73,6 @@ app.delete("/", (req, res) => {
 });
 
 app.put("/", async (req, res) => {
-  console.log("in express");
-  console.log(data);
   data.items = data.items.map((item) => {
     if (item.id == req.body.id) {
       if (item.completed) {
@@ -84,10 +83,18 @@ app.put("/", async (req, res) => {
     }
     return item;
   });
-  console.log(data);
-  //res.end();
-  //res.render("index.ejs", data);
+  res.render("storeList.ejs", data);
 });
+
+app.patch("/", async (req, res) => {
+  if (data.filter) {
+    data.filter = false
+  } else {
+    data.filter = true;
+  }
+  res.render("storeList.ejs", data);
+});
+
 // app.get("/list/:item", (req, res) => {
 //   res.find((post) => post.id == req.params.item);
 // });
@@ -131,10 +138,9 @@ app.put("/", async (req, res) => {
 // Create and use error-handling middleware.
 
 // 404 Middleware
-// app.use((req, res, next) => {
-//     console.log("rni")
-// //   next(error(404, "Resource Not Found"));
-// });
+app.use((req, res, next) => {
+  next(error(404, "Resource Not Found"));
+});
 
 // Error-handling middleware.
 // Any call to next() that includes an
@@ -144,10 +150,10 @@ app.put("/", async (req, res) => {
 // but allows us to change the processing of ALL errors
 // at once in a single location, which is important for
 // scalability and maintainability.
-// app.use((err, req, res, next) => {
-//   res.status(err.status || 500);
-//   res.json({ error: err.message });
-// });
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({ error: err.message });
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
