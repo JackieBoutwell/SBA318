@@ -20,7 +20,7 @@ The requirements were to create a small Node and Express server application.
 
 <br>I was using simple HTML and CSS files.
 <br>Views folder which contains ejs files.
-<br>Data folder contains two items of data to start and a variable of filtered.<br>\
+<br>Data folder contains two items of data to start and a variable of filtered.<br>
 
 1. Create app to practice GET, POST, PUT, PATCH, and DELETE requests.
 2. Create and use at least two pieces of custom middleware.
